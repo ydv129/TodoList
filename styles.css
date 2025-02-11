@@ -1,0 +1,102 @@
+*{
+ margin: 0;
+ padding: 0;
+ box-sizing: border-box;
+ overflow: hidden;
+ background: #1a1a2e; 
+}
+#child{
+  
+   height: 100%;
+   width: 100%;
+   cursor: pointer;
+   position:absolute;
+}
+
+#nav{
+    display: flex;
+    position: relative;
+  
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.sparkle {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    background-color: white;
+    border-radius: 50%;
+    box-shadow: 0 0 6px rgba(255, 255, 255, 0.8);
+    pointer-events: none;
+    opacity: 1;
+    animation: sparkle-fade 0.6s ease-out forwards;
+}
+
+@keyframes sparkle-fade {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(0);
+        opacity: 0;
+    }
+}
+
+
+
+
+
+.shape {
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    opacity: 0.8;
+    transition: transform 0.6s ease-out;
+    pointer-events: none;
+}
+
+.circle {
+    background-color: rgba(255, 100, 150, 0.7);
+    border-radius: 50%;
+}
+
+.square {
+    background-color: rgba(50, 200, 255, 0.7);
+}
+
+.triangle {
+    width: 0;
+    height: 0;
+    border-left: 15px solid transparent;
+    border-right: 15px solid transparent;
+    border-bottom: 30px solid rgba(255, 255, 0, 0.7);
+}
+
+/* Liquid floating effect */
+@keyframes float {
+    0% { transform: translateY(0px) rotate(0deg); }
+    50% { transform: translateY(-10px) rotate(5deg); }
+    100% { transform: translateY(0px) rotate(0deg); }
+}
