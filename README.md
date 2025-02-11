@@ -1,2 +1,0 @@
-# Canvas
-Simple canvas
