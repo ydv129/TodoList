@@ -1,25 +1,127 @@
-<!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"></link>
 </head>
-<body>
-   
-        <div id="shapes-container">
-            <div id="nav">
-                <ul>
-                    <li><a href="index.html">Home</a></li>
-                    <li><a href="shapes.html">Shapes</a></li>
-                    <li><a href="colors.html">Colors</a></li>
-                    <li><a href="about.html">About</a></li>
-                </ul>
-                
+<body class="bg-blue-900 flex items-center justify-center min-h-screen">
+    <div class="w-80 bg-blue-800 p-4 rounded-lg shadow-lg">
+        <h1 class="text-white text-center text-xl font-bold mb-4">Todo List</h1>
+        
+        <div class="mb-4">
+            <label class="text-white block mb-1">Add New</label>
+            <div class="flex">
+                <input id="new-task" type="text" placeholder="type here..." class="flex-grow p-2 rounded-l-md border-none">
+                <button id="add-task" class="bg-green-600 text-white p-2 rounded-r-md"><i class="fas fa-plus"></i></button>
             </div>
-        </div>   
-    
-<script src="script.js"></script>
+        </div>
+        
+        <div class="mb-4">
+            <label class="text-white block mb-1">Filter</label>
+            <input id="filter-tasks" type="text" placeholder="type here..." class="w-full p-2 rounded-md border-none">
+        </div>
+        
+        <div class="mb-4">
+            <h2 class="text-white text-lg mb-2">Active</h2>
+            <div id="active-tasks"></div>
+        </div>
+        
+        <div class="mb-4">
+            <h2 class="text-white text-lg mb-2">Completed</h2>
+            <div id="completed-tasks"></div>
+        </div>
+        
+        <button id="clear-all" class="bg-black text-white w-full p-2 rounded-md">CLEAR ALL</button>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const newTaskInput = document.getElementById('new-task');
+            const addTaskButton = document.getElementById('add-task');
+            const filterTasksInput = document.getElementById('filter-tasks');
+            const activeTasksContainer = document.getElementById('active-tasks');
+            const completedTasksContainer = document.getElementById('completed-tasks');
+            const clearAllButton = document.getElementById('clear-all');
+
+            let tasks = [];
+
+            function renderTasks() {
+                activeTasksContainer.innerHTML = '';
+                completedTasksContainer.innerHTML = '';
+
+                const filteredTasks = tasks.filter(task => task.text.toLowerCase().includes(filterTasksInput.value.toLowerCase()));
+
+                filteredTasks.forEach(task => {
+                    const taskElement = document.createElement('div');
+                    taskElement.className = 'flex items-center mb-2';
+
+                    const checkbox = document.createElement('input');
+                    checkbox.type = 'checkbox';
+                    checkbox.className = 'mr-2';
+                    checkbox.checked = task.completed;
+                    checkbox.addEventListener('change', () => {
+                        task.completed = !task.completed;
+                        renderTasks();
+                    });
+
+                    const taskText = document.createElement('span');
+                    taskText.className = 'flex-grow text-white';
+                    if (task.completed) {
+                        taskText.classList.add('line-through');
+                    }
+                    taskText.textContent = task.text;
+
+                    const editButton = document.createElement('button');
+                    editButton.className = 'bg-blue-600 text-white p-1 rounded-md mr-1';
+                    editButton.innerHTML = '<i class="fas fa-pen"></i>';
+                    editButton.addEventListener('click', () => {
+                        const newText = prompt('Edit task:', task.text);
+                        if (newText !== null) {
+                            task.text = newText;
+                            renderTasks();
+                        }
+                    });
+
+                    const deleteButton = document.createElement('button');
+                    deleteButton.className = 'bg-red-600 text-white p-1 rounded-md';
+                    deleteButton.innerHTML = '<i class="fas fa-times"></i>';
+                    deleteButton.addEventListener('click', () => {
+                        tasks = tasks.filter(t => t !== task);
+                        renderTasks();
+                    });
+
+                    taskElement.appendChild(checkbox);
+                    taskElement.appendChild(taskText);
+                    taskElement.appendChild(editButton);
+                    taskElement.appendChild(deleteButton);
+
+                    if (task.completed) {
+                        completedTasksContainer.appendChild(taskElement);
+                    } else {
+                        activeTasksContainer.appendChild(taskElement);
+                    }
+                });
+            }
+
+            addTaskButton.addEventListener('click', () => {
+                const newTaskText = newTaskInput.value.trim();
+                if (newTaskText) {
+                    tasks.push({ text: newTaskText, completed: false });
+                    newTaskInput.value = '';
+                    renderTasks();
+                } else {
+                    alert('Enter something');
+                }
+            });
+
+            filterTasksInput.addEventListener('input', renderTasks);
+
+            clearAllButton.addEventListener('click', () => {
+                tasks = [];
+                renderTasks();
+            });
+
+            renderTasks();
+        });
+    </script>
 </body>
 </html>
