@@ -33,6 +33,27 @@
         <button id="clear-all" class="bg-black text-white w-full p-2 rounded-md">CLEAR ALL</button>
     </div>
 
+    <div id="alert-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden">
+        <div class="bg-white p-4 rounded-lg shadow-lg w-80">
+            <h2 class="text-lg font-bold mb-4">Alert</h2>
+            <p class="mb-4">Please enter something</p>
+            <div class="flex justify-end">
+                <button id="close-alert" class="bg-blue-600 text-white p-2 rounded-md">OK</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="edit-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden">
+        <div class="bg-white p-4 rounded-lg shadow-lg w-80">
+            <h2 class="text-lg font-bold mb-4">Edit Task</h2>
+            <input id="edit-task-input" type="text" class="w-full p-2 mb-4 border rounded-md">
+            <div class="flex justify-end">
+                <button id="cancel-edit" class="bg-gray-500 text-white p-2 rounded-md mr-2">Cancel</button>
+                <button id="save-edit" class="bg-blue-600 text-white p-2 rounded-md">Save</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const newTaskInput = document.getElementById('new-task');
@@ -41,8 +62,15 @@
             const activeTasksContainer = document.getElementById('active-tasks');
             const completedTasksContainer = document.getElementById('completed-tasks');
             const clearAllButton = document.getElementById('clear-all');
+            const alertModal = document.getElementById('alert-modal');
+            const closeAlertButton = document.getElementById('close-alert');
+            const editModal = document.getElementById('edit-modal');
+            const editTaskInput = document.getElementById('edit-task-input');
+            const cancelEditButton = document.getElementById('cancel-edit');
+            const saveEditButton = document.getElementById('save-edit');
 
             let tasks = [];
+            let taskToEdit = null;
 
             function renderTasks() {
                 activeTasksContainer.innerHTML = '';
@@ -74,11 +102,9 @@
                     editButton.className = 'bg-blue-600 text-white p-1 rounded-md mr-1';
                     editButton.innerHTML = '<i class="fas fa-pen"></i>';
                     editButton.addEventListener('click', () => {
-                        const newText = prompt('Edit task:', task.text);
-                        if (newText !== null) {
-                            task.text = newText;
-                            renderTasks();
-                        }
+                        taskToEdit = task;
+                        editTaskInput.value = task.text;
+                        editModal.classList.remove('hidden');
                     });
 
                     const deleteButton = document.createElement('button');
@@ -109,7 +135,25 @@
                     newTaskInput.value = '';
                     renderTasks();
                 } else {
-                    alert('Enter something');
+                    alertModal.classList.remove('hidden');
+                }
+            });
+
+            closeAlertButton.addEventListener('click', () => {
+                alertModal.classList.add('hidden');
+                newTaskInput.focus();
+            });
+
+            cancelEditButton.addEventListener('click', () => {
+                editModal.classList.add('hidden');
+            });
+
+            saveEditButton.addEventListener('click', () => {
+                if (taskToEdit) {
+                    taskToEdit.text = editTaskInput.value.trim();
+                    taskToEdit = null;
+                    editModal.classList.add('hidden');
+                    renderTasks();
                 }
             });
 
